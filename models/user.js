@@ -1,3 +1,4 @@
+const { Decimal128 } = require("mongodb");
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
@@ -7,7 +8,7 @@ const schema = new Schema(
     email: { type: String, required: true },
     password: { type: String, required: true },
     role: { type: Schema.Types.ObjectId, ref: "roles" },
-    locations: [{ type: String }],
+    locations: [{ direction: String, latitude: Decimal128, longitude: Decimal128 }],
   },
   {
     versionKey: false,

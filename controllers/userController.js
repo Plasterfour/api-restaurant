@@ -1,4 +1,4 @@
-const con_mongodb = require("../config/con_mongodb");
+//const con_mongodb = require("../config/con_mongodb");
 const Model = require("../models/user");
 const bcrypt = require("bcrypt");
 
@@ -30,9 +30,10 @@ module.exports = {
     //let get_all = await db.collection("users").find({}).toArray();
     //const get_all = await Model.find();
   },
+
   //CREATE USER
   async createU(req, res) {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     const emailExist = await Model.findOne({ email: email });
     if (emailExist) return res.status(400).send("Email already exists.");
     //hash passwords
@@ -42,26 +43,31 @@ module.exports = {
       name,
       email,
       password: hashPassword,
+      role: role,
     });
-    await createUser.save();
+    try {
+      const createdUser = await createUser.save();
+      res.json({
+        message: `User ${name} created.`,
+      });
+    } catch (error) {
+      res.status(400).send(error);
+    }
     //const db = await con_mongodb();
     //await db.collection("users").insertOne(createUser);
-    res.json({
-      message: `User ${name} created.`,
-    });
   },
 
   //UPDATE USER
   async updateU(req, res) {
     const { id } = req.params;
-    const { name, email, password, location } = req.body;
+    const { name, email, password, _id, role } = req.body;
     //hash passwords
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
     await Model.findByIdAndUpdate(
-      id,
+      _id,
       {
-        $set: { name, email, password: hashPassword, location },
+        $set: { name, email, password: hashPassword, role },
       },
       { useFindAndModify: false }
     );
@@ -87,6 +93,8 @@ module.exports = {
       message: `User ${id} deleted.`,
     });
   },
+
+  //ASSING ROLE
   async assignRole(req, res) {
     const { id } = req.params;
     const { role } = req.body;
@@ -104,5 +112,21 @@ module.exports = {
       message: `Role ${role} assigned.`,
     });
   },
-  //LOCATION
+  //ASSIGN LOCATIONS
+  async assignLocations(req, res) {
+    const { id } = req.params;
+    const { direction, latitude, longitude } = req.body;
+    await Model.findByIdAndUpdate(id, {
+      $push: {
+        locations: {
+          direction: direction,
+          latitude: latitude,
+          longitude: longitude,
+        },
+      },
+    });
+    res.json({
+      message: `direction ${direction} assigned.`,
+    });
+  },
 };
