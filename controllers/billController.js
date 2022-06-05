@@ -6,7 +6,7 @@ module.exports = {
     const { id } = req.params;
     await Model.findById(id)
       .populate("user")
-      .populate("id")
+      .populate("products")
       .exec((err, get_one) => {
         res.json(get_one);
       });
@@ -16,7 +16,7 @@ module.exports = {
   async getAll(req, res) {
     await Model.find()
       .populate("user")
-      .populate("products.product")
+      .populate("products.id")
       .exec((err, get_all) => {
         res.json(get_all);
       });

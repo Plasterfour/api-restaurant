@@ -64,7 +64,7 @@ module.exports = {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
     await Model.findByIdAndUpdate(
-      _id,
+      id,
       {
         $set: { name, email, password: hashPassword, role },
       },
