@@ -6,18 +6,16 @@ const schema = new Schema(
     date: { type: Date, default: Date.now() },
     user: { type: Schema.Types.ObjectId, ref: "users" },
     products: [
-      {
-        product: {
-          type: Schema.Types.ObjectId,
-          ref: "products",
+      [
+        {
+          id: { type: Schema.Types.ObjectId, ref: "products" },
+          amount: Number,
         },
-        amount: Number,
-      },
+      ],
     ],
     total: Number,
   },
   {
-    timestamps: true,
     versionKey: false,
   }
 );

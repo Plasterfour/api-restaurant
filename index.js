@@ -1,4 +1,3 @@
-const { response } = require("express");
 const express = require("express"),
   bodyParser = require("body-parser"),
   jwt = require("jsonwebtoken"),
@@ -30,7 +29,7 @@ const bcrypt = require("bcrypt");
 const userController = require("./controllers/userController");
 const roleController = require("./controllers/roleController");
 const productController = require("./controllers/productController");
-const { restart } = require("nodemon");
+const billController = require("./controllers/billController");
 
 //MAIN
 app.get("/", (req, res) => {
@@ -59,6 +58,11 @@ app.get("/product/:id", /* auth, */ productController.getOne);
 app.post("/product/", /* auth, */ productController.createP);
 app.put("/product/:id", /* auth, */ productController.updateP);
 app.delete("/product/:id", /* auth, */ productController.deleteP);
+
+//BILLS
+app.get("/bill/", /* auth, */ billController.getAll);
+app.get("/bill/:id", /* auth, */ billController.getOne);
+app.post("/bill/", /* auth, */ billController.createB);
 
 //REGISTER
 app.post("/register", async (req, res) => {

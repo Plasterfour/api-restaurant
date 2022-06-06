@@ -1,4 +1,3 @@
-//const con_mongodb = require("../config/con_mongodb");
 const Model = require("../models/user");
 const bcrypt = require("bcrypt");
 
